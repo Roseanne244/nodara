@@ -71,9 +71,9 @@ const COMPARE = [
 
 const FOOTER_LINKS = [
   { label: 'Docs', href: 'https://docs.shelby.xyz' },
-  { label: 'GitHub', href: '#' },
-  { label: 'Discord', href: '#' },
-  { label: 'Twitter', href: '#' },
+  { label: 'GitHub', href: 'https://github.com/Roseanne244/nodara' },
+  { label: 'Discord', href: 'https://discord.com/invite/shelbyserves' },
+  { label: 'X', href: 'https://x.com/itschelseeaa_' },
 ]
 
 export function Landing({ onLaunch, theme, toggleTheme }) {

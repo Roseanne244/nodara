@@ -1,60 +1,91 @@
 # Nodara
 
-Nodara is a Shelby storage dashboard for Aptos wallets. It supports:
+Nodara is a Shelby-powered storage workspace for Aptos-native uploads, blob management, and explorer-based verification across **Shelby Testnet** and **Shelbynet**.
 
-- Shelby Testnet
-- Shelbynet
-- wallet connect via `@aptos-labs/wallet-adapter-react`
-- upload, list, download, delete
-- expiry-aware file management
+It is built for users who want a practical dApp, not just SDK examples:
 
-## What This App Is
+- connect an Aptos wallet
+- upload blobs with expiry presets
+- inspect upload history
+- preview, download, and delete stored files
+- open blob and transaction views in Shelby Explorer
+- switch safely between `Testnet` and `Shelbynet`
 
-This project is a community-facing dApp for Shelby users who need a practical interface to:
+## Highlights
 
-- upload blobs
-- inspect stored files
-- track expiry windows
-- switch between Shelby Testnet and Shelbynet
-- manage files with a connected Aptos wallet
+- **Dual-network support**
+  Works across `Shelby Testnet` and `Shelbynet`.
 
-It is not just a hackathon mockup anymore. The current build is structured for static deployment on Vercel.
+- **Wallet-aware storage actions**
+  Upload and delete flows are signed with an Aptos-compatible wallet.
+
+- **Expiry-aware UX**
+  Set blob expiry presets and review active, expiring, or expired files.
+
+- **Explorer-linked history**
+  Open transaction or blob details directly in Shelby Explorer.
+
+- **Shelbynet-safe messaging**
+  The UI clearly marks prototype-network behavior and warns when data may be reset or wiped.
 
 ## Supported Networks
 
-| App key | Label | Aptos network | Shelby network |
-| --- | --- | --- | --- |
-| `testnet` | Shelby Testnet | `Network.TESTNET` | `Network.TESTNET` |
-| `devnet` | Shelbynet | `Network.SHELBYNET` | `Network.SHELBYNET` |
+| App key | UI label | Aptos network | Shelby network | Notes |
+| --- | --- | --- | --- | --- |
+| `testnet` | `Shelby Testnet` | `Network.TESTNET` | `Network.TESTNET` | public test environment |
+| `devnet` | `Shelbynet` | `Network.SHELBYNET` | `Network.SHELBYNET` | prototype environment |
 
-Note:
+Notes:
 
-- `devnet` is only the internal app key kept for backward compatibility.
-- Everywhere in the UI and docs, this should be understood as `Shelbynet`.
+- `devnet` is only kept as the **internal app key** for backward compatibility.
+- In the UI and product copy, this environment is always treated as **Shelbynet**.
+
+## Core Features
+
+- wallet connect via `@aptos-labs/wallet-adapter-react`
+- upload queue with multi-file support
+- local preview before upload for image, text, and PDF files
+- stored blob preview in dashboard history
+- blob expiry presets:
+  `7 days`, `14 days`, `30 days`, `60 days`, `90 days`, `360 days`
+- download and delete actions
+- bulk selection in history
+- copy blob references and blob names
+- Shelby Explorer integration
+- network-specific API key handling for `Testnet` and `Shelbynet`
+
+## Stack
+
+- React
+- Vite
+- `@aptos-labs/ts-sdk`
+- `@aptos-labs/wallet-adapter-react`
+- `@shelby-protocol/sdk`
+- `@shelby-protocol/react`
+- `@tanstack/react-query`
+- Recharts
 
 ## Requirements
 
-- Node.js 20+ recommended
+- Node.js `20+` recommended
 - an Aptos-compatible wallet such as Petra
-- a Shelby API key for each network you want to use
+- Shelby API keys for the networks you want to use
 
 ## Environment Variables
 
-Create `.env.local` in the project root.
+Copy `.env.example` and create `.env.local` in the project root.
 
-Use the included `.env.example` as the template.
-
-Required keys:
+Required:
 
 ```env
-VITE_SHELBY_API_KEY_TESTNET=...
-VITE_SHELBY_API_KEY_SHELBYNET=...
+VITE_SHELBY_API_KEY_TESTNET=
+VITE_SHELBY_API_KEY_SHELBYNET=
 ```
 
 Optional legacy fallback:
 
 ```env
-VITE_SHELBY_API_KEY=...
+VITE_SHELBY_API_KEY=
 ```
 
 ## Local Development
@@ -64,7 +95,7 @@ npm install
 npm run dev
 ```
 
-Then open:
+Open:
 
 ```text
 http://localhost:5173
@@ -77,44 +108,25 @@ npm run build
 npm run preview
 ```
 
-## Deploy To Vercel
+## Deployment Notes
 
-This repo is already configured as an SPA with [vercel.json](/c:/Users/User/Desktop/nodara-real/vercel.json:1).
+This project is prepared for static deployment with Vite output in `dist/`.
 
-Deployment checklist:
+If you deploy later on Vercel:
 
-1. Import the repo into Vercel.
-2. Framework preset: `Vite`.
-3. Build command: `npm run build`.
-4. Output directory: `dist`.
-5. Add env vars in the Vercel project:
+1. import the repo
+2. use the `Vite` framework preset
+3. set build command to `npm run build`
+4. set output directory to `dist`
+5. add:
    `VITE_SHELBY_API_KEY_TESTNET`
    `VITE_SHELBY_API_KEY_SHELBYNET`
-6. Trigger a deploy.
-7. Test both networks on the preview deployment before promoting to production.
-
-## Manual QA Checklist
-
-Before submission or public rollout, verify:
-
-1. Wallet connect works.
-2. Network switch works between Testnet and Shelbynet.
-3. Upload succeeds on both networks.
-4. History loads on both networks.
-5. Download works.
-6. Delete works.
-7. Expiry badges render correctly.
-8. Invalid API key produces a clear error state.
-9. Refreshing the deployed app URL does not 404.
-10. Mobile and desktop layouts remain usable.
-
-For a more detailed test run, use [QA_PASS_SHEET.md](/c:/Users/User/Desktop/nodara-real/QA_PASS_SHEET.md:1).
 
 ## Common Issues
 
 ### `401 Unauthorized`
 
-Usually means the network-specific Shelby API key is missing or invalid.
+Usually means the active network does not have a valid Shelby API key.
 
 Check:
 
@@ -127,33 +139,48 @@ Restart the dev server after editing env files.
 
 Check:
 
-- the selected app network
-- the wallet network
+- selected app network
+- wallet network
 - faucet balance for the selected environment
 
 ### Shelbynet behaves differently from Testnet
 
-That is expected. Shelbynet is a separate environment and may have different access controls or reset behavior.
+That is expected.
 
-## Current Stack
+`Shelbynet` is treated as a **prototype network** and may have different access controls, reset behavior, or wipe events.
 
-- React
-- Vite
-- `@aptos-labs/ts-sdk`
-- `@aptos-labs/wallet-adapter-react`
-- `@shelby-protocol/sdk`
-- `@shelby-protocol/react`
-- React Query
+## QA
+
+Before public rollout, verify:
+
+1. wallet connection
+2. network switching
+3. upload on both networks
+4. history loading on both networks
+5. preview, download, and delete flows
+6. blob explorer and transaction explorer links
+7. expiry preset behavior
+8. invalid API key handling
+9. desktop and mobile layout
+
+Detailed references:
+
+- [QA_PASS_SHEET.md](./QA_PASS_SHEET.md)
+- [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md)
 
 ## Project Notes
 
-- Shelby dependencies are pinned in `package.json` to avoid drift.
+- Shelby dependencies are pinned to avoid API drift.
 - The app uses lazy loading for major screens and dashboard modules.
-- Vendor chunking is configured in [vite.config.ts](/c:/Users/User/Desktop/nodara-real/vite.config.ts:1) to keep production output more stable.
+- `vite.config.ts` includes manual chunking to keep production output more stable.
+- `.env.local` is ignored and should never be committed.
 
-## Recommended Next Checks Before Public Share
+## Current Status
 
-- run a real Vercel preview with final env vars
-- verify both networks from the deployed URL
-- confirm API keys used for community access are the intended ones
-- decide whether Shelbynet should be openly exposed or marked experimental in copy
+Nodara is already in a strong pre-release state for:
+
+- GitHub showcase
+- community review
+- QA across Shelby environments
+
+The next sensible step is final QA and then a preview deployment.

@@ -11,6 +11,24 @@ It is built for users who want a practical dApp, not just SDK examples:
 - open blob and transaction views in Shelby Explorer
 - switch safely between `Testnet` and `Shelbynet`
 
+## Screenshots
+
+### Landing
+
+![Nodara landing page](./docs/screenshots/landing.png)
+
+### Dashboard
+
+| Shelbynet overview | Testnet overview |
+| --- | --- |
+| ![Shelbynet overview](./docs/screenshots/overview-shelbynet.png) | ![Testnet overview](./docs/screenshots/overview-testnet.png) |
+
+### Workflows
+
+| Upload workspace | History workspace |
+| --- | --- |
+| ![Upload workspace](./docs/screenshots/upload.png) | ![History workspace](./docs/screenshots/history.png) |
+
 ## Highlights
 
 - **Dual-network support**

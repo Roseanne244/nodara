@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nodara — Own your data. Store forever.</title>
+    <script>
+      // Inline Buffer polyfill for @shelby-protocol/reed-solomon WASM
+      (function() {
+        if (typeof globalThis.Buffer !== 'undefined') return;
+        function Buffer(data, encoding) {
+          if (typeof data === 'number') return new Uint8Array(data);
+          if (typeof data === 'string') {
+            if (encoding === 'base64') {
+              var bin = atob(data), bytes = new Uint8Array(bin.length);
+              for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+              return bytes;
+            }
+            return new TextEncoder().encode(data);
+          }
+          return new Uint8Array(data);
+        }
+        Buffer.from = function(data, encoding) { return Buffer(data, encoding); };
+        Buffer.alloc = function(size, fill) {
+          var b = new Uint8Array(size);
+          if (fill !== undefined) b.fill(typeof fill === 'string' ? fill.charCodeAt(0) : fill);
+          return b;
+        };
+        Buffer.allocUnsafe = function(size) { return new Uint8Array(size); };
+        Buffer.isBuffer = function(obj) { return obj instanceof Uint8Array; };
+        Buffer.concat = function(list, len) {
+          var total = len || list.reduce(function(s, b) { return s + b.length; }, 0);
+          var result = new Uint8Array(total), offset = 0;
+          list.forEach(function(b) { result.set(b, offset); offset += b.length; });
+          return result;
+        };
+        Buffer.isEncoding = function() { return false; };
+        globalThis.Buffer = Buffer;
+        if (typeof window !== 'undefined') window.Buffer = Buffer;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
